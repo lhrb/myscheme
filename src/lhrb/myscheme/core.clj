@@ -24,14 +24,12 @@
 (read-string "(quote (+ 1 1))")
 
 
-(symbol? (first (read-string "(syb a b)")))
-
 (defn eval
   [env form]
   (cond
     (literal? form) form
     (quote? form) (second form)
-    ((starts-with? symbol?) form) "symbol"))
+    ((starts-with? symbol?) form) (apply (get env (first form)) (rest form))))
 
-(eval '(quote (+ 1 1)))
-(eval {} '(sym 1 2))
+(get {'+ +} '+)
+(eval {'+ +} '(+ 1 2))
